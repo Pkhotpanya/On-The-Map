@@ -193,6 +193,7 @@
 				TargetAttributes = {
 					0A231ED61DC91CC1002E34D6 = {
 						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = K9T59C7GGA;
 						ProvisioningStyle = Automatic;
 					};
 					0A231EEA1DC91CC1002E34D6 = {
@@ -412,6 +413,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = K9T59C7GGA;
 				INFOPLIST_FILE = "On The Map/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.peterkhotpanya.On-The-Map";
@@ -424,6 +426,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = K9T59C7GGA;
 				INFOPLIST_FILE = "On The Map/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.peterkhotpanya.On-The-Map";
@@ -505,6 +508,7 @@
 				0A231F011DC91CC1002E34D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0A231F021DC91CC1002E34D6 /* Build configuration list for PBXNativeTarget "On The MapTests" */ = {
 			isa = XCConfigurationList;
@@ -513,6 +517,7 @@
 				0A231F041DC91CC1002E34D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0A231F051DC91CC1002E34D6 /* Build configuration list for PBXNativeTarget "On The MapUITests" */ = {
 			isa = XCConfigurationList;
@@ -521,6 +526,7 @@
 				0A231F071DC91CC1002E34D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

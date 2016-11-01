@@ -8,12 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		0A231EDB1DC91CC1002E34D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A231EDA1DC91CC1002E34D6 /* AppDelegate.swift */; };
-		0A231EDD1DC91CC1002E34D6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A231EDC1DC91CC1002E34D6 /* ViewController.swift */; };
+		0A231EDD1DC91CC1002E34D6 /* PostLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A231EDC1DC91CC1002E34D6 /* PostLocationViewController.swift */; };
 		0A231EE01DC91CC1002E34D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A231EDE1DC91CC1002E34D6 /* Main.storyboard */; };
 		0A231EE21DC91CC1002E34D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A231EE11DC91CC1002E34D6 /* Assets.xcassets */; };
 		0A231EE51DC91CC1002E34D6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A231EE31DC91CC1002E34D6 /* LaunchScreen.storyboard */; };
 		0A231EF01DC91CC1002E34D6 /* On_The_MapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A231EEF1DC91CC1002E34D6 /* On_The_MapTests.swift */; };
 		0A231EFB1DC91CC1002E34D6 /* On_The_MapUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A231EFA1DC91CC1002E34D6 /* On_The_MapUITests.swift */; };
+		0A231F091DC93E0B002E34D6 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A231F081DC93E0B002E34D6 /* LoginViewController.swift */; };
+		0A231F0B1DC93E18002E34D6 /* PostLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A231F0A1DC93E18002E34D6 /* PostLinkViewController.swift */; };
+		0A231F0D1DC93E80002E34D6 /* PinTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A231F0C1DC93E80002E34D6 /* PinTableViewController.swift */; };
+		0A231F0F1DC93EB9002E34D6 /* PinMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A231F0E1DC93EB9002E34D6 /* PinMapViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +40,7 @@
 /* Begin PBXFileReference section */
 		0A231ED71DC91CC1002E34D6 /* On The Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On The Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A231EDA1DC91CC1002E34D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0A231EDC1DC91CC1002E34D6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		0A231EDC1DC91CC1002E34D6 /* PostLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostLocationViewController.swift; sourceTree = "<group>"; };
 		0A231EDF1DC91CC1002E34D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0A231EE11DC91CC1002E34D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0A231EE41DC91CC1002E34D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -47,6 +51,10 @@
 		0A231EF61DC91CC1002E34D6 /* On The MapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "On The MapUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A231EFA1DC91CC1002E34D6 /* On_The_MapUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = On_The_MapUITests.swift; sourceTree = "<group>"; };
 		0A231EFC1DC91CC1002E34D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0A231F081DC93E0B002E34D6 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		0A231F0A1DC93E18002E34D6 /* PostLinkViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostLinkViewController.swift; sourceTree = "<group>"; };
+		0A231F0C1DC93E80002E34D6 /* PinTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinTableViewController.swift; sourceTree = "<group>"; };
+		0A231F0E1DC93EB9002E34D6 /* PinMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinMapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,11 +106,15 @@
 			isa = PBXGroup;
 			children = (
 				0A231EDA1DC91CC1002E34D6 /* AppDelegate.swift */,
-				0A231EDC1DC91CC1002E34D6 /* ViewController.swift */,
 				0A231EDE1DC91CC1002E34D6 /* Main.storyboard */,
 				0A231EE11DC91CC1002E34D6 /* Assets.xcassets */,
 				0A231EE31DC91CC1002E34D6 /* LaunchScreen.storyboard */,
 				0A231EE61DC91CC1002E34D6 /* Info.plist */,
+				0A231F081DC93E0B002E34D6 /* LoginViewController.swift */,
+				0A231EDC1DC91CC1002E34D6 /* PostLocationViewController.swift */,
+				0A231F0A1DC93E18002E34D6 /* PostLinkViewController.swift */,
+				0A231F0E1DC93EB9002E34D6 /* PinMapViewController.swift */,
+				0A231F0C1DC93E80002E34D6 /* PinTableViewController.swift */,
 			);
 			path = "On The Map";
 			sourceTree = "<group>";
@@ -260,7 +272,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A231EDD1DC91CC1002E34D6 /* ViewController.swift in Sources */,
+				0A231F0B1DC93E18002E34D6 /* PostLinkViewController.swift in Sources */,
+				0A231F0F1DC93EB9002E34D6 /* PinMapViewController.swift in Sources */,
+				0A231F091DC93E0B002E34D6 /* LoginViewController.swift in Sources */,
+				0A231EDD1DC91CC1002E34D6 /* PostLocationViewController.swift in Sources */,
+				0A231F0D1DC93E80002E34D6 /* PinTableViewController.swift in Sources */,
 				0A231EDB1DC91CC1002E34D6 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  PostLocationViewController.swift
 //  On The Map
 //
 //  Created by Peter Khotpanya on 11/1/16.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class PostLocationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

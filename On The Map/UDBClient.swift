@@ -16,7 +16,7 @@ class UDBClient: NSObject {
     var userID: Int? = nil
     
     // MARK: Shared Instance
-    class func sharedInstance() -> UDBClient {
+    class func shared() -> UDBClient {
         struct Singleton {
             static var shared = UDBClient()
         }
@@ -24,7 +24,7 @@ class UDBClient: NSObject {
     }
 
     //To authenticate Udacity API requests, you need to get a session ID.
-    func postASession(username: String, password: String, completion: @escaping (_ result: Data, _ error: NSError) -> Void){
+    func postASession(username: String, password: String, completion: @escaping (_ result: Data,_ error: NSError) -> Void){
 
         //udacity - (Dictionary) a dictionary containing a username/password pair used for authentication
         //username - (String) the username (email) for a Udacity student

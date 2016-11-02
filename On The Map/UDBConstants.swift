@@ -9,6 +9,20 @@
 
 import UIKit
 
-class UDBConstants: NSObject {
+extension UDBClient {
+
+    struct Constants {
+        static let ParseApplicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
+        static let RESTAPIKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
+        
+        static let StudentLocationURL = "https://parse.udacity.com/parse/classes/StudentLocation"
+        static let SessionURL = "https://www.udacity.com/api/session"
+        static let PublicUserDataURL = "https://www.udacity.com/api/users"
+    }
+    
+    enum StudentLocationOrderKeys: String {
+        case updatedAt
+        case reverseUpdatedAt = "-updatedAt"
+    }
 
 }

@@ -5,6 +5,7 @@
 //  Created by Peter Khotpanya on 11/1/16.
 //  Copyright © 2016 Peter Khotpanya. All rights reserved.
 //
+//  List all students.
 
 import UIKit
 

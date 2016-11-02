@@ -5,6 +5,7 @@
 //  Created by Peter Khotpanya on 11/1/16.
 //  Copyright © 2016 Peter Khotpanya. All rights reserved.
 //
+//  Allows users to identify themselves or create a new account before using the app services.
 
 import UIKit
 

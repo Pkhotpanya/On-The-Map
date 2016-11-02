@@ -5,9 +5,9 @@
 //  Created by Peter Khotpanya on 11/1/16.
 //  Copyright © 2016 Peter Khotpanya. All rights reserved.
 //
+// First view in the information post process.
 
 import UIKit
-import MapKit
 
 class PostLocationViewController: UIViewController {
 

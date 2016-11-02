@@ -5,11 +5,12 @@
 //  Created by Peter Khotpanya on 11/1/16.
 //  Copyright © 2016 Peter Khotpanya. All rights reserved.
 //
+//  Pin all students to a map
 
 import UIKit
 import MapKit
 
-class PinMapViewController: UIViewController {
+class PinMapViewController: UIViewController, MKMapViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()

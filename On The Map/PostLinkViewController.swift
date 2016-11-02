@@ -5,10 +5,12 @@
 //  Created by Peter Khotpanya on 11/1/16.
 //  Copyright © 2016 Peter Khotpanya. All rights reserved.
 //
+//  Second and last view in the information post process.
 
 import UIKit
+import MapKit
 
-class PostLinkViewController: UIViewController {
+class PostLinkViewController: UIViewController, MKMapViewDelegate{
 
     override func viewDidLoad() {
         super.viewDidLoad()

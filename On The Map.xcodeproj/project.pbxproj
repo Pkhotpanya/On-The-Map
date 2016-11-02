@@ -18,6 +18,10 @@
 		0A231F0B1DC93E18002E34D6 /* PostLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A231F0A1DC93E18002E34D6 /* PostLinkViewController.swift */; };
 		0A231F0D1DC93E80002E34D6 /* PinTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A231F0C1DC93E80002E34D6 /* PinTableViewController.swift */; };
 		0A231F0F1DC93EB9002E34D6 /* PinMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A231F0E1DC93EB9002E34D6 /* PinMapViewController.swift */; };
+		0A231F111DC95C66002E34D6 /* UDBClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A231F101DC95C66002E34D6 /* UDBClient.swift */; };
+		0A231F131DC95C9C002E34D6 /* UDBConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A231F121DC95C9C002E34D6 /* UDBConstants.swift */; };
+		0A231F151DC95CC9002E34D6 /* UDBServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A231F141DC95CC9002E34D6 /* UDBServices.swift */; };
+		0A231F171DC95D22002E34D6 /* UDBStudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A231F161DC95D22002E34D6 /* UDBStudentInformation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +59,10 @@
 		0A231F0A1DC93E18002E34D6 /* PostLinkViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostLinkViewController.swift; sourceTree = "<group>"; };
 		0A231F0C1DC93E80002E34D6 /* PinTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinTableViewController.swift; sourceTree = "<group>"; };
 		0A231F0E1DC93EB9002E34D6 /* PinMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinMapViewController.swift; sourceTree = "<group>"; };
+		0A231F101DC95C66002E34D6 /* UDBClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UDBClient.swift; sourceTree = "<group>"; };
+		0A231F121DC95C9C002E34D6 /* UDBConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UDBConstants.swift; sourceTree = "<group>"; };
+		0A231F141DC95CC9002E34D6 /* UDBServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UDBServices.swift; sourceTree = "<group>"; };
+		0A231F161DC95D22002E34D6 /* UDBStudentInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UDBStudentInformation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,16 +113,13 @@
 		0A231ED91DC91CC1002E34D6 /* On The Map */ = {
 			isa = PBXGroup;
 			children = (
+				0A231F191DC96065002E34D6 /* ViewControllers */,
+				0A231F181DC9605C002E34D6 /* Model */,
 				0A231EDA1DC91CC1002E34D6 /* AppDelegate.swift */,
 				0A231EDE1DC91CC1002E34D6 /* Main.storyboard */,
 				0A231EE11DC91CC1002E34D6 /* Assets.xcassets */,
 				0A231EE31DC91CC1002E34D6 /* LaunchScreen.storyboard */,
 				0A231EE61DC91CC1002E34D6 /* Info.plist */,
-				0A231F081DC93E0B002E34D6 /* LoginViewController.swift */,
-				0A231EDC1DC91CC1002E34D6 /* PostLocationViewController.swift */,
-				0A231F0A1DC93E18002E34D6 /* PostLinkViewController.swift */,
-				0A231F0E1DC93EB9002E34D6 /* PinMapViewController.swift */,
-				0A231F0C1DC93E80002E34D6 /* PinTableViewController.swift */,
 			);
 			path = "On The Map";
 			sourceTree = "<group>";
@@ -135,6 +140,29 @@
 				0A231EFC1DC91CC1002E34D6 /* Info.plist */,
 			);
 			path = "On The MapUITests";
+			sourceTree = "<group>";
+		};
+		0A231F181DC9605C002E34D6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0A231F101DC95C66002E34D6 /* UDBClient.swift */,
+				0A231F141DC95CC9002E34D6 /* UDBServices.swift */,
+				0A231F121DC95C9C002E34D6 /* UDBConstants.swift */,
+				0A231F161DC95D22002E34D6 /* UDBStudentInformation.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		0A231F191DC96065002E34D6 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				0A231F081DC93E0B002E34D6 /* LoginViewController.swift */,
+				0A231EDC1DC91CC1002E34D6 /* PostLocationViewController.swift */,
+				0A231F0A1DC93E18002E34D6 /* PostLinkViewController.swift */,
+				0A231F0E1DC93EB9002E34D6 /* PinMapViewController.swift */,
+				0A231F0C1DC93E80002E34D6 /* PinTableViewController.swift */,
+			);
+			name = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -275,8 +303,12 @@
 				0A231F0B1DC93E18002E34D6 /* PostLinkViewController.swift in Sources */,
 				0A231F0F1DC93EB9002E34D6 /* PinMapViewController.swift in Sources */,
 				0A231F091DC93E0B002E34D6 /* LoginViewController.swift in Sources */,
+				0A231F131DC95C9C002E34D6 /* UDBConstants.swift in Sources */,
 				0A231EDD1DC91CC1002E34D6 /* PostLocationViewController.swift in Sources */,
+				0A231F111DC95C66002E34D6 /* UDBClient.swift in Sources */,
+				0A231F171DC95D22002E34D6 /* UDBStudentInformation.swift in Sources */,
 				0A231F0D1DC93E80002E34D6 /* PinTableViewController.swift in Sources */,
+				0A231F151DC95CC9002E34D6 /* UDBServices.swift in Sources */,
 				0A231EDB1DC91CC1002E34D6 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

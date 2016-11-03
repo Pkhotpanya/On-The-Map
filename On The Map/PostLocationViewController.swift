@@ -9,7 +9,7 @@
 
 import UIKit
 
-class PostLocationViewController: UIViewController {
+class PostLocationViewController: UIViewController, OTMUtility {
     
     @IBOutlet weak var locationTextField: UITextField!
     
@@ -25,11 +25,11 @@ class PostLocationViewController: UIViewController {
     }
 
     @IBAction func cancel(_ sender: Any) {
-        
+        OTMCancelAddingPin()
     }
     
     @IBAction func findLocationOnTheMap(_ sender: Any) {
-        
+        OTMFindLocationOnTheMap()
     }
 
 }

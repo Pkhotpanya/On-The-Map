@@ -10,7 +10,7 @@
 import UIKit
 import MapKit
 
-class PostLinkViewController: UIViewController, MKMapViewDelegate{
+class PostLinkViewController: UIViewController, MKMapViewDelegate, OTMUtility{
 
     @IBOutlet weak var linkTextField: UITextField!
     @IBOutlet weak var mapView: MKMapView!
@@ -27,11 +27,11 @@ class PostLinkViewController: UIViewController, MKMapViewDelegate{
     }
     
     @IBAction func cancel(_ sender: Any) {
-        
+        OTMCancelAddingPin()
     }
 
     @IBAction func submit(_ sender: Any) {
-        
+        OTMSubmitStudentLocation()
     }
 
 }

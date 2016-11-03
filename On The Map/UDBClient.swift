@@ -17,6 +17,10 @@ class UDBClient: NSObject {
     var sessionID: String? = ""
     var userID: Int? = 0
     
+    // on device cache
+    var studentInformation: UDBStudentInformation? = UDBStudentInformation(dictionary: [:])
+    var studentsLocations = [UDBStudentInformation]()
+    
     // MARK: Initializers
     private override init() {
         super.init()

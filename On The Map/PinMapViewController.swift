@@ -10,7 +10,7 @@
 import UIKit
 import MapKit
 
-class PinMapViewController: UIViewController, MKMapViewDelegate {
+class PinMapViewController: UIViewController, MKMapViewDelegate, OTMUtility {
 
     @IBOutlet weak var mapView: MKMapView!
     
@@ -22,31 +22,18 @@ class PinMapViewController: UIViewController, MKMapViewDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if (UDBClient.shared.sessionID?.isEmpty)! {
-            performSegue(withIdentifier: "loginSegue", sender: nil)
-        }
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        OTMLoginChecker()
     }
     
     @IBAction func logOut(_ sender: Any) {
-        UDBClient.shared.deleteASession { (success) in
-            if success {
-                self.performSegue(withIdentifier: "loginSegue", sender: nil)
-            }
-        }
+        OTMLogOut()
     }
     
     @IBAction func addPin(_ sender: Any) {
-        //Check for existing user location
-        
-        //Ask if user wants to overwrite
+        OTMAddPin()
     }
     
     @IBAction func refreshPin(_ sender: Any) {
-        
+        OTMRefreshPins()
     }
 }

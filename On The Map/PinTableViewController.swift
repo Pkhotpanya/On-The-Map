@@ -9,7 +9,7 @@
 
 import UIKit
 
-class PinTableViewController: UITableViewController {
+class PinTableViewController: UITableViewController, OTMUtility {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,30 +23,19 @@ class PinTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if (UDBClient.shared.sessionID?.isEmpty)! {
-            performSegue(withIdentifier: "loginSegue", sender: nil)
-        }
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        OTMLoginChecker()
     }
     
     @IBAction func logOut(_ sender: Any) {
-        UDBClient.shared.deleteASession { (success) in
-            if success {
-                self.performSegue(withIdentifier: "loginSegue", sender: nil)
-            }
-        }
+        OTMLogOut()
     }
     
     @IBAction func addPin(_ sender: Any) {
-   
+        OTMAddPin()
     }
     
     @IBAction func refreshPin(_ sender: Any) {
-        
+        OTMRefreshPins()
     }
 
     // MARK: - Table view data source

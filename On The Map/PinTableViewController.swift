@@ -23,7 +23,7 @@ class PinTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if (UDBClient.shared().sessionID?.isEmpty)! {
+        if (UDBClient.shared.sessionID?.isEmpty)! {
             performSegue(withIdentifier: "loginSegue", sender: nil)
         }
     }
@@ -34,7 +34,11 @@ class PinTableViewController: UITableViewController {
     }
     
     @IBAction func logOut(_ sender: Any) {
-    
+        UDBClient.shared.deleteASession { (success) in
+            if success {
+                self.performSegue(withIdentifier: "loginSegue", sender: nil)
+            }
+        }
     }
     
     @IBAction func addPin(_ sender: Any) {

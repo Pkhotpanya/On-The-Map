@@ -11,20 +11,19 @@ import UIKit
 
 class UDBClient: NSObject {
     
-    // authentication state
-    var sessionID: String? = nil
-    var userID: Int? = nil
+    static let shared = UDBClient()
     
-    // MARK: Shared Instance
-    class func shared() -> UDBClient {
-        struct Singleton {
-            static var shared = UDBClient()
-        }
-        return Singleton.shared
+    // authentication state
+    var sessionID: String? = ""
+    var userID: Int? = 0
+    
+    // MARK: Initializers
+    private override init() {
+        super.init()
     }
 
     //To authenticate Udacity API requests, you need to get a session ID.
-    func postASession(username: String, password: String, completion: @escaping (_ result: Data,_ error: NSError) -> Void){
+    func postASession(username: String, password: String, completion: @escaping (_ success: Bool) -> Void){
 
         //udacity - (Dictionary) a dictionary containing a username/password pair used for authentication
         //username - (String) the username (email) for a Udacity student
@@ -40,17 +39,35 @@ class UDBClient: NSObject {
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
             if error != nil { // Handle error…
+                completion(false)
                 return
             }
             let newData = data?.subdata(in: 5..<data!.count) /* subset response data! */
             print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
-            completion(data!, error as! NSError)
+            
+            do{
+                // Convert NSData to Dictionary where keys are of type String, and values are of any type
+                let json = try JSONSerialization.jsonObject(with: newData!, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:AnyObject]
+                    
+                if let account = json["account"] as! [String:AnyObject]?{
+                    self.userID = account["key"] as? Int
+                }
+                
+                if let sessionValue = json["session"] as! [String:AnyObject]?{
+                    self.sessionID = sessionValue["id"] as? String
+                }
+                
+            } catch {
+                
+            }
+            
+            completion(true)
         }
         task.resume()
     }
     
     //Once you get a session ID using Udacity's API, you should delete the session ID to "logout".
-    func deleteASession(completion: @escaping (_ result: Data, _ error: NSError) -> Void){
+    func deleteASession(completion: @escaping (_ success: Bool) -> Void){
 
         let request = NSMutableURLRequest(url: NSURL(string: Constants.SessionURL)! as URL)
         request.httpMethod = "DELETE"
@@ -65,11 +82,13 @@ class UDBClient: NSObject {
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
             if error != nil { // Handle error…
+                completion(false)
                 return
             }
             let newData = data?.subdata(in: 5..<data!.count) /* subset response data! */
             print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
-            completion(data!, error as! NSError)
+            
+            completion(true)
         }
         task.resume()
     }

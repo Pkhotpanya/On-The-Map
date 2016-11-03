@@ -21,8 +21,14 @@ class LoginViewController: UIViewController {
     }
 
     @IBAction func login(_ sender: Any) {
-        UDBClient.shared().postASession(username: emailTextField.text!, password: passwordTextField.text!, completion: { (data, error) in
-            
+        UDBClient.shared.postASession(username: emailTextField.text!, password: passwordTextField.text!, completion: { (success) in
+            if !success {
+                let alert=UIAlertController(title: "Failed to login", message: "", preferredStyle: UIAlertControllerStyle.alert);
+                //show it
+                self.show(alert, sender: self);
+            } else {
+                self.dismiss(animated: true, completion: nil)
+            }
         })
     }
 

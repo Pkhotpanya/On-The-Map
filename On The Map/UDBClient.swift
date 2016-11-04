@@ -64,6 +64,7 @@ class UDBClient: NSObject {
                 
                 DispatchQueue.global(qos: .userInitiated).async {
                     self.getPublicUserData(uniqueKey: self.uniqueKey!)
+                    self.getAStudentLocation(uniqueKey: self.uniqueKey!)
                 }
                 
             } catch {
@@ -123,7 +124,7 @@ class UDBClient: NSObject {
             
             do{
                 // Convert NSData to Dictionary where keys are of type String, and values are of any type
-                let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:AnyObject]
+                let json = try JSONSerialization.jsonObject(with: newData!, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:AnyObject]
                 
                 if let student = json["user"] as! [String:AnyObject]?{
                     self.userFirstName = student["first_name"] as! String?

@@ -12,12 +12,12 @@ import UIKit
 extension UDBClient {
     
     //To get a single student location
-    func getAStudentLocation(uniqueKey: String, completion: @escaping (_ result: Data, _ error: NSError) -> Void){
+    func getAStudentLocation(uniqueKey: String){
         //where - (Parse Query) a SQL-like query allowing you to check if an object value matches some target value
         
-        let url = String(format: "%@?where=%7B%22uniqueKey%22%3A%22%@%22%7D", Constants.StudentLocationURL, uniqueKey)
-        
-        let request = NSMutableURLRequest(url: NSURL(string: url)! as URL)
+        let stringUrl = String(format: "%@?where={\"uniqueKey\":\"%@\"}", Constants.StudentLocationURL, uniqueKey)
+        let urlWithEncoding = stringUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let request = NSMutableURLRequest(url: NSURL(string: urlWithEncoding!)! as URL)
         request.addValue(Constants.ParseApplicationID, forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue(Constants.RESTAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
         let session = URLSession.shared
@@ -26,9 +26,23 @@ extension UDBClient {
                 return
             }
             print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
-            completion(data!, error as! NSError)
+            
+            do{
+                // Convert NSData to Dictionary where keys are of type String, and values are of any type
+                let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:AnyObject]
+                
+                if let students = json["results"] as! [[String:AnyObject]]?{
+                    if let studentInfo = students.first {
+                        self.studentInformation = UDBStudentInformation(dictionary: studentInfo)
+                    }
+                }
+                
+            } catch {
+                
+            }
         }
         task.resume()
+
     }
     
     //To get multiple student locations at one time

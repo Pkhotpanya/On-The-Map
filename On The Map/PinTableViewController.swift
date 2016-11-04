@@ -11,19 +11,28 @@ import UIKit
 
 class PinTableViewController: UITableViewController, OTMUtility {
 
+    var studentLocations = [UDBStudentInformation]()
+    var shouldReload: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(PinTableViewController.flipOnShouldReload), name: UDBClient.Constants.ReloadLocationViewsNotification, object: nil)
+        
+        //Initial loading of table values from shared model.
+        studentLocations = UDBClient.shared.studentsLocations
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        OTMLoginChecker()
+        if shouldReload {
+            reloadTable()
+            shouldReload = false
+        }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
     
     @IBAction func logOut(_ sender: Any) {
@@ -37,62 +46,42 @@ class PinTableViewController: UITableViewController, OTMUtility {
     @IBAction func refreshPin(_ sender: Any) {
         OTMRefreshPins()
     }
+    
+    func flipOnShouldReload(){
+        if self.isViewLoaded && (self.view.window != nil){
+            DispatchQueue.main.async {
+                self.reloadTable()
+            }
+        } else {
+            shouldReload = true
+        }
+    }
+    
+    func reloadTable(){
+        studentLocations = UDBClient.shared.studentsLocations
+        tableView.reloadData()
+    }
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return studentLocations.count//UDBClient.shared.studentsLocations.count
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: "basicTableCell", for: indexPath)
+        
+        let studentInformation = studentLocations[indexPath.item]
+        cell.imageView?.image = UIImage(named: "pin")
+        cell.textLabel?.text = String(format: "%@ %@", studentInformation.firstName, studentInformation.lastName)
         return cell
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let studentInformation = studentLocations[indexPath.item]
+        if !studentInformation.mediaURL.isEmpty {
+            UIApplication.shared.open(NSURL(string: studentInformation.mediaURL) as! URL, options:[:], completionHandler: nil)
+        }
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
 
 }

@@ -32,7 +32,7 @@ extension UDBClient {
     }
     
     //To get multiple student locations at one time
-    func getStudentLocations(limit: Int = 100, skip: Int = 0, order: StudentLocationOrderKeys = StudentLocationOrderKeys.updatedAt, completion: @escaping (_ result: Data, _ error: NSError) -> Void){
+    func getStudentLocations(limit: Int = 100, skip: Int = 0, order: StudentLocationOrderKeys = StudentLocationOrderKeys.updatedAt, completion: @escaping (_ success: Bool) -> Void){
         //limit - (Number) specifies the maximum number of StudentLocation objects to return in the JSON response
         //skip - (Number) use this parameter with limit to paginate through results
         //order - (String) a comma-separate list of key names that specify the sorted order of the results. Prefixing a key name with a negative sign reverses the order (default order is ascending)
@@ -47,10 +47,29 @@ extension UDBClient {
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
             if error != nil { // Handle error...
+                completion(false)
                 return
             }
-            print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
-            completion(data!, error as! NSError)
+            //print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+            
+            do{
+                // Convert NSData to Dictionary where keys are of type String, and values are of any type
+                let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:AnyObject]
+                
+                if let students = json["results"] as! [[String:AnyObject]]?{
+                    var tempStudentsInformation = [UDBStudentInformation]()
+                    for studentInfo in students{
+                        tempStudentsInformation.append( UDBStudentInformation(dictionary: studentInfo) )
+                    }
+                    self.studentsLocations.removeAll()
+                    self.studentsLocations.append(contentsOf: tempStudentsInformation)
+                }
+                
+            } catch {
+                
+            }
+            
+            completion(true)
         }
         task.resume()
     }

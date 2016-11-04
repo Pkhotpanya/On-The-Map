@@ -125,15 +125,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="UFC-gQ-7kP">
-                                <rect key="frame" x="16" y="64" width="343" height="554"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
+                                <connections>
+                                    <outlet property="delegate" destination="ckO-D2-6Zu" id="yBY-HW-zAJ"/>
+                                </connections>
                             </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="UFC-gQ-7kP" firstAttribute="leading" secondItem="jNV-ID-YFG" secondAttribute="leadingMargin" id="DSe-fi-JU6"/>
+                            <constraint firstItem="UFC-gQ-7kP" firstAttribute="leading" secondItem="jNV-ID-YFG" secondAttribute="leadingMargin" constant="-16" id="DSe-fi-JU6"/>
                             <constraint firstItem="Dk9-q5-FUZ" firstAttribute="top" secondItem="UFC-gQ-7kP" secondAttribute="bottom" id="Ko4-R2-Y6c"/>
                             <constraint firstItem="UFC-gQ-7kP" firstAttribute="top" secondItem="o1H-qi-P1c" secondAttribute="bottom" id="Q0y-IL-shb"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="UFC-gQ-7kP" secondAttribute="trailing" id="hpa-MA-TTZ"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="UFC-gQ-7kP" secondAttribute="trailing" constant="-16" id="hpa-MA-TTZ"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="On The Map" id="RSC-Cz-Snf">
@@ -163,7 +166,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="trL-oc-1YI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1066" y="-48"/>
+            <point key="canvasLocation" x="1064.8" y="-48.125937031484263"/>
         </scene>
         <!--List-->
         <scene sceneID="qv7-P1-BqM">
@@ -349,6 +352,9 @@
                                     </textField>
                                     <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="aY7-Tu-RjC">
                                         <rect key="frame" x="0.0" y="194.5" width="375" height="194"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="SlH-FP-dre" id="WmG-l6-Fs7"/>
+                                        </connections>
                                     </mapView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wyh-Zn-gWn">
                                         <rect key="frame" x="0.0" y="388.5" width="375" height="194.5"/>
@@ -424,7 +430,7 @@
         <image name="udacity" width="62" height="62"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="DDp-8E-wKf"/>
-        <segue reference="DoR-Mk-vRf"/>
+        <segue reference="TTH-RG-W75"/>
+        <segue reference="XRh-TW-dg8"/>
     </inferredMetricsTieBreakers>
 </document>

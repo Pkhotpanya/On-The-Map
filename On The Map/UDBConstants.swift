@@ -18,6 +18,8 @@ extension UDBClient {
         static let StudentLocationURL = "https://parse.udacity.com/parse/classes/StudentLocation"
         static let SessionURL = "https://www.udacity.com/api/session"
         static let PublicUserDataURL = "https://www.udacity.com/api/users"
+        
+        static let ReloadLocationViewsNotification = NSNotification.Name(rawValue: "ReloadPinViewsNotification")
     }
     
     enum StudentLocationOrderKeys: String {

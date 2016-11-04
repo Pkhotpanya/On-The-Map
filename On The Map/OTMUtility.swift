@@ -15,7 +15,7 @@ extension OTMUtility where Self: UIViewController{
     
     func OTMLoginChecker() {
         if (UDBClient.shared.sessionID?.isEmpty)! {
-            self.performSegue(withIdentifier: "loginSegue", sender: nil)
+            //self.performSegue(withIdentifier: "loginSegue", sender: nil)
         }
     }
     
@@ -62,7 +62,13 @@ extension OTMUtility where Self: UIViewController{
     }
     
     func OTMRefreshPins(){
+        //Add activity indicator here
         
+        UDBClient.shared.getStudentLocations(limit: 100, skip: 0, order: .updatedAt, completion: { (success) in
+            if success {
+                NotificationCenter.default.post(name: UDBClient.Constants.ReloadLocationViewsNotification, object: nil)
+            }
+        })
     }
     
     func OTMCancelAddingPin(){

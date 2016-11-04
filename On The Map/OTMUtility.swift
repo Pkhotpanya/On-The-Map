@@ -15,7 +15,7 @@ extension OTMUtility where Self: UIViewController{
     
     func OTMLoginChecker() {
         if (UDBClient.shared.sessionID?.isEmpty)! {
-            //self.performSegue(withIdentifier: "loginSegue", sender: nil)
+            self.performSegue(withIdentifier: "loginSegue", sender: nil)
         }
     }
     
@@ -26,11 +26,15 @@ extension OTMUtility where Self: UIViewController{
     func OTMLogin(username: String, password: String){
         UDBClient.shared.postASession(username: username, password: password, completion: { (success) in
             if !success {
-                let alert=UIAlertController(title: "Failed to login", message: "", preferredStyle: UIAlertControllerStyle.alert);
-                //show it
-                self.show(alert, sender: self);
+                DispatchQueue.main.async {
+                    let alert=UIAlertController(title: "Failed to login", message: "", preferredStyle: UIAlertControllerStyle.alert);
+                    //show it
+                    self.show(alert, sender: self);
+                }
             } else {
-                self.dismiss(animated: true, completion: nil)
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true, completion: nil)
+                }
             }
         })
     }
@@ -38,7 +42,9 @@ extension OTMUtility where Self: UIViewController{
     func OTMLogOut() {
         UDBClient.shared.deleteASession { (success) in
             if success {
-                self.performSegue(withIdentifier: "loginSegue", sender: nil)
+                DispatchQueue.main.async {
+                    self.performSegue(withIdentifier: "loginSegue", sender: nil)
+                }
             }
         }
     }

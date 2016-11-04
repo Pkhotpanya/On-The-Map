@@ -15,7 +15,9 @@ class UDBClient: NSObject {
     
     // authentication state
     var sessionID: String? = ""
-    var userID: Int? = 0
+    var uniqueKey: String? = ""
+    var userFirstName: String? = ""
+    var userLastName: String? = ""
     
     // on device cache
     var studentInformation: UDBStudentInformation? = UDBStudentInformation(dictionary: [:])
@@ -28,7 +30,6 @@ class UDBClient: NSObject {
 
     //To authenticate Udacity API requests, you need to get a session ID.
     func postASession(username: String, password: String, completion: @escaping (_ success: Bool) -> Void){
-
         //udacity - (Dictionary) a dictionary containing a username/password pair used for authentication
         //username - (String) the username (email) for a Udacity student
         //password - (String) the password for a Udacity student
@@ -54,11 +55,15 @@ class UDBClient: NSObject {
                 let json = try JSONSerialization.jsonObject(with: newData!, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:AnyObject]
                     
                 if let account = json["account"] as! [String:AnyObject]?{
-                    self.userID = account["key"] as? Int
+                    self.uniqueKey = account["key"] as? String
                 }
                 
                 if let sessionValue = json["session"] as! [String:AnyObject]?{
                     self.sessionID = sessionValue["id"] as? String
+                }
+                
+                DispatchQueue.global(qos: .userInitiated).async {
+                    self.getPublicUserData(uniqueKey: self.uniqueKey!)
                 }
                 
             } catch {
@@ -92,15 +97,20 @@ class UDBClient: NSObject {
             let newData = data?.subdata(in: 5..<data!.count) /* subset response data! */
             print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
             
+            self.sessionID = ""
+            self.uniqueKey = ""
+            self.userFirstName = ""
+            self.userLastName = ""
+            self.studentInformation = UDBStudentInformation(dictionary: [:])
+            
             completion(true)
         }
         task.resume()
     }
     
     //The whole purpose of using Udacity's API is to retrieve some basic user information before posting data to Parse.
-    func getPublicUserData(userId: String, completion: @escaping (_ result: Data, _ error: NSError) -> Void){
-        
-        let url = String(format: "%@/%@", Constants.PublicUserDataURL, userId)
+    func getPublicUserData(uniqueKey: String){
+        let url = String(format: "%@/%@", Constants.PublicUserDataURL, uniqueKey)
     
         let request = NSMutableURLRequest(url: NSURL(string: url)! as URL)
         let session = URLSession.shared
@@ -110,7 +120,18 @@ class UDBClient: NSObject {
             }
             let newData = data?.subdata(in: 5..<data!.count) /* subset response data! */
             print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
-            completion(data!, error as! NSError)
+            
+            do{
+                // Convert NSData to Dictionary where keys are of type String, and values are of any type
+                let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:AnyObject]
+                
+                if let student = json["user"] as! [String:AnyObject]?{
+                    self.userFirstName = student["first_name"] as! String?
+                    self.userLastName = student["last_name"] as! String?
+                }
+            } catch {
+                
+            }
         }
         task.resume()
     }

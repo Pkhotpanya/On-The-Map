@@ -85,7 +85,7 @@ extension OTMUtility where Self: UIViewController{
     }
     
     func OTMRefreshPins(){
-        UDBClient.shared.getStudentLocations(limit: 100, skip: 0, order: .updatedAt, completion: { (success) in
+        UDBClient.shared.getStudentLocations(limit: 100, skip: 0, order: .reverseUpdatedAt, completion: { (success) in
             if success {
                 NotificationCenter.default.post(name: UDBClient.Constants.ReloadLocationViewsNotification, object: nil)
             } else {

@@ -26,14 +26,14 @@ struct UDBStudentInformation {
     
     init(dictionary: [String:AnyObject]){
         if !dictionary.isEmpty{
-            objectId = dictionary[UDBStudentInformationKeys.objectId.rawValue] as! String
-            uniqueKey = dictionary[UDBStudentInformationKeys.uniqueKey.rawValue] as! String
-            firstName = dictionary[UDBStudentInformationKeys.firstName.rawValue] as! String
-            lastName = dictionary[UDBStudentInformationKeys.lastName.rawValue] as! String
-            mapString = dictionary[UDBStudentInformationKeys.mapString.rawValue] as! String
-            mediaURL = dictionary[UDBStudentInformationKeys.mediaURL.rawValue] as! String
-            latitude = dictionary[UDBStudentInformationKeys.latitude.rawValue] as! Float
-            longitude = dictionary[UDBStudentInformationKeys.longitude.rawValue] as! Float
+            objectId = dictionary[UDBStudentInformationKeys.objectId.rawValue] as? String ?? ""
+            uniqueKey = dictionary[UDBStudentInformationKeys.uniqueKey.rawValue] as? String ?? ""
+            firstName = dictionary[UDBStudentInformationKeys.firstName.rawValue] as? String ?? ""
+            lastName = dictionary[UDBStudentInformationKeys.lastName.rawValue] as? String ?? ""
+            mapString = dictionary[UDBStudentInformationKeys.mapString.rawValue] as? String ?? ""
+            mediaURL = dictionary[UDBStudentInformationKeys.mediaURL.rawValue] as? String ?? ""
+            latitude = dictionary[UDBStudentInformationKeys.latitude.rawValue] as? Float ?? 0.0
+            longitude = dictionary[UDBStudentInformationKeys.longitude.rawValue] as? Float ?? 0.0
         } else {
             objectId = ""
             uniqueKey = ""

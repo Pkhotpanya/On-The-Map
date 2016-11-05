@@ -25,7 +25,7 @@ extension UDBClient {
             if error != nil { // Handle error
                 return
             }
-            print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+            //print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
             
             do{
                 // Convert NSData to Dictionary where keys are of type String, and values are of any type
@@ -33,7 +33,7 @@ extension UDBClient {
                 
                 if let students = json["results"] as! [[String:AnyObject]]?{
                     if let studentInfo = students.first {
-                        self.studentInformation = UDBStudentInformation(dictionary: studentInfo)
+                        self.userStudentInformation = UDBStudentInformation(dictionary: studentInfo)
                     }
                 }
                 
@@ -89,9 +89,9 @@ extension UDBClient {
     }
     
     //To create a new student location
-    func postAStudentLocation(studentInformation: UDBStudentInformation, completion: @escaping (_ result: Data, _ error: NSError) -> Void){
+    func postAStudentLocation(uniqueKey: String, studentInformation: UDBStudentInformation, completion: @escaping (_ success: Bool) -> Void){
         
-        let httpBody = String(format: "{\"uniqueKey\": \"%@\", \"firstName\": \"%@\", \"lastName\": \"%@\",\"mapString\": \"%@\", \"mediaURL\": \"%@\",\"latitude\": %.6f, \"longitude\": %.6f}", studentInformation.uniqueKey, studentInformation.firstName, studentInformation.lastName, studentInformation.mapString, studentInformation.mediaURL, studentInformation.latitude, studentInformation.longitude)
+        let httpBody = String(format: "{\"uniqueKey\": \"%@\", \"firstName\": \"%@\", \"lastName\": \"%@\",\"mapString\": \"%@\", \"mediaURL\": \"%@\",\"latitude\": %.6f, \"longitude\": %.6f}", uniqueKey, studentInformation.firstName, studentInformation.lastName, studentInformation.mapString, studentInformation.mediaURL, studentInformation.latitude, studentInformation.longitude)
         
         let request = NSMutableURLRequest(url: NSURL(string: Constants.StudentLocationURL)! as URL)
         request.httpMethod = "POST"
@@ -102,17 +102,34 @@ extension UDBClient {
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
             if error != nil { // Handle error…
+                completion(false)
                 return
             }
-            print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
-            completion(data!, error as! NSError)
+            //print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+            
+            do{
+                // Convert NSData to Dictionary where keys are of type String, and values are of any type
+                let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:AnyObject]
+                
+                if let objectId = json["objectId"]{
+                    self.objectId = objectId as? String
+                }
+            } catch {
+                
+            }
+            
+            DispatchQueue.global(qos: .userInitiated).async {
+                self.getAStudentLocation(uniqueKey: self.uniqueKey!)
+            }
+            self.tempStudentInformation = UDBStudentInformation(dictionary: [:])
+            
+            completion(true)
         }
         task.resume()
     }
     
     //To update an existing student location
-    func putAStudentLocation(studentInformation: UDBStudentInformation, completion: @escaping (_ result: Data, _ error: NSError) -> Void){
-
+    func putAStudentLocation(studentInformation: UDBStudentInformation, completion: @escaping (_ success: Bool) -> Void){
         //objectId - (String) the object ID of the StudentLocation to update; specify the object ID right after StudentLocation in URL as seen below
 
         let url = String(format: "%@/%@", Constants.StudentLocationURL, studentInformation.objectId)
@@ -128,10 +145,15 @@ extension UDBClient {
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
             if error != nil { // Handle error…
+                completion(false)
                 return
             }
             print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
-            completion(data!, error as! NSError)
+            
+            self.userStudentInformation = studentInformation
+            self.tempStudentInformation = UDBStudentInformation(dictionary: [:])
+    
+            completion(true)
         }
         task.resume()
     }

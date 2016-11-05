@@ -18,9 +18,11 @@ class UDBClient: NSObject {
     var uniqueKey: String? = ""
     var userFirstName: String? = ""
     var userLastName: String? = ""
+    var objectId: String? = ""
     
     // on device cache
-    var studentInformation: UDBStudentInformation? = UDBStudentInformation(dictionary: [:])
+    var tempStudentInformation: UDBStudentInformation? = UDBStudentInformation(dictionary: [:])
+    var userStudentInformation: UDBStudentInformation? = UDBStudentInformation(dictionary: [:])
     var studentsLocations = [UDBStudentInformation]()
     
     // MARK: Initializers
@@ -48,7 +50,7 @@ class UDBClient: NSObject {
                 return
             }
             let newData = data?.subdata(in: 5..<data!.count) /* subset response data! */
-            print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
+            //print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
             
             do{
                 // Convert NSData to Dictionary where keys are of type String, and values are of any type
@@ -95,14 +97,15 @@ class UDBClient: NSObject {
                 completion(false)
                 return
             }
-            let newData = data?.subdata(in: 5..<data!.count) /* subset response data! */
-            print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
-            
+//            let newData = data?.subdata(in: 5..<data!.count) /* subset response data! */
+//            print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
+//            
             self.sessionID = ""
             self.uniqueKey = ""
             self.userFirstName = ""
             self.userLastName = ""
-            self.studentInformation = UDBStudentInformation(dictionary: [:])
+            self.tempStudentInformation = UDBStudentInformation(dictionary: [:])
+            self.userStudentInformation = UDBStudentInformation(dictionary: [:])
             
             completion(true)
         }
@@ -120,7 +123,7 @@ class UDBClient: NSObject {
                 return
             }
             let newData = data?.subdata(in: 5..<data!.count) /* subset response data! */
-            print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
+            //print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
             
             do{
                 // Convert NSData to Dictionary where keys are of type String, and values are of any type

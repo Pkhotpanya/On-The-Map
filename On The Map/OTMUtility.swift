@@ -27,12 +27,12 @@ extension OTMUtility where Self: UIViewController{
     func OTMLogin(username: String, password: String){
         startAnimatingActivity()
         
-        UDBClient.shared.postASession(username: username, password: password, completion: { (success) in
+        UDBClient.shared.postASession(username: username, password: password, completion: { (success, errorMessage) in
             if !success {
-                //TODO: If the login does not succeed, the user will be presented with an alert view specifying whether it was a failed network connection, or an incorrect email and password.
+                //If the login does not succeed, the user will be presented with an alert view specifying whether it was a failed network connection, or an incorrect email and password.
                 DispatchQueue.main.async {
                     self.stopAnimatingActivity(){
-                        let alert=UIAlertController(title: "Failed to login", message: "", preferredStyle: UIAlertControllerStyle.alert);
+                        let alert=UIAlertController(title: "Failed to login", message: errorMessage, preferredStyle: UIAlertControllerStyle.alert);
                         let accept = UIAlertAction(title: "Ok", style: .default, handler: { (alertAction) in
                             alert.dismiss(animated: true, completion: nil)
                         })
@@ -145,12 +145,12 @@ extension OTMUtility where Self: UIViewController{
         UDBClient.shared.tempStudentInformation?.mediaURL = mediaUrl
         
         if (UDBClient.shared.userStudentInformation?.objectId.isEmpty)! {
-            UDBClient.shared.postAStudentLocation(uniqueKey: UDBClient.shared.uniqueKey! ,studentInformation: UDBClient.shared.tempStudentInformation!, completion: { (success) in
-                self.submissionResponse(worked: success)
+            UDBClient.shared.postAStudentLocation(uniqueKey: UDBClient.shared.uniqueKey!, studentInformation: UDBClient.shared.tempStudentInformation!, completion: { (success, errorMessage) in
+                self.submissionResponse(worked: success, why: errorMessage)
             })
         } else {
-            UDBClient.shared.putAStudentLocation(studentInformation: UDBClient.shared.tempStudentInformation!, completion: { (success) in
-                self.submissionResponse(worked: success)
+            UDBClient.shared.putAStudentLocation(objectId: (UDBClient.shared.userStudentInformation?.objectId)!, uniqueKey: UDBClient.shared.uniqueKey!, studentInformation: UDBClient.shared.tempStudentInformation!, completion: { (success, errorMessage) in
+                self.submissionResponse(worked: success, why: errorMessage)
             })
         }
     }
@@ -160,7 +160,7 @@ extension OTMUtility where Self: UIViewController{
         UDBClient.shared.tempStudentInformation?.lastName = UDBClient.shared.userLastName!
     }
     
-    func submissionResponse(worked: Bool){
+    func submissionResponse(worked: Bool, why: String){
         if worked {
             DispatchQueue.main.async {
                 self.stopAnimatingActivity {
@@ -168,10 +168,10 @@ extension OTMUtility where Self: UIViewController{
                 }
             }
         } else {
-            //TODO:If the submission fails to post the data to the server, then the user should see an alert with an error message describing the failure.
+            //If the submission fails to post the data to the server, then the user should see an alert with an error message describing the failure.
             DispatchQueue.main.async {
                 self.stopAnimatingActivity(){
-                    let alert = UIAlertController(title: "Couldn't save student location", message: "", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "Couldn't save student location", message: why, preferredStyle: .alert)
                     let accept = UIAlertAction(title: "Ok", style: .default, handler: { (alertAction) in
                         alert.dismiss(animated: true, completion: nil)
                     })

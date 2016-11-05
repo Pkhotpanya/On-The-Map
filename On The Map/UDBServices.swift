@@ -89,7 +89,7 @@ extension UDBClient {
     }
     
     //To create a new student location
-    func postAStudentLocation(uniqueKey: String, studentInformation: UDBStudentInformation, completion: @escaping (_ success: Bool) -> Void){
+    func postAStudentLocation(uniqueKey: String, studentInformation: UDBStudentInformation, completion: @escaping (_ success: Bool,_ errorMessage: String) -> Void){
         
         let httpBody = String(format: "{\"uniqueKey\": \"%@\", \"firstName\": \"%@\", \"lastName\": \"%@\",\"mapString\": \"%@\", \"mediaURL\": \"%@\",\"latitude\": %.6f, \"longitude\": %.6f}", uniqueKey, studentInformation.firstName, studentInformation.lastName, studentInformation.mapString, studentInformation.mediaURL, studentInformation.latitude, studentInformation.longitude)
         
@@ -102,7 +102,7 @@ extension UDBClient {
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
             if error != nil { // Handle error…
-                completion(false)
+                completion(false, (error?.localizedDescription)!)
                 return
             }
             //print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
@@ -122,19 +122,22 @@ extension UDBClient {
                 self.getAStudentLocation(uniqueKey: self.uniqueKey!)
             }
             self.tempStudentInformation = UDBStudentInformation(dictionary: [:])
-            
-            completion(true)
+            if let errorMessage = error?.localizedDescription {
+                completion(true, errorMessage)
+            } else {
+                completion(true, "")
+            }
         }
         task.resume()
     }
     
     //To update an existing student location
-    func putAStudentLocation(studentInformation: UDBStudentInformation, completion: @escaping (_ success: Bool) -> Void){
+    func putAStudentLocation(objectId: String, uniqueKey: String, studentInformation: UDBStudentInformation, completion: @escaping (_ success: Bool,_ errorMessage: String) -> Void){
         //objectId - (String) the object ID of the StudentLocation to update; specify the object ID right after StudentLocation in URL as seen below
 
-        let url = String(format: "%@/%@", Constants.StudentLocationURL, studentInformation.objectId)
+        let url = String(format: "%@/%@", Constants.StudentLocationURL, objectId)
         
-        let httpBody = String(format: "{\"uniqueKey\": \"%@\", \"firstName\": \"%@\", \"lastName\": \"%@\",\"mapString\": \"%@\", \"mediaURL\": \"%@\",\"latitude\": %.6f, \"longitude\": %.6f}", studentInformation.uniqueKey, studentInformation.firstName, studentInformation.lastName, studentInformation.mapString, studentInformation.mediaURL, studentInformation.latitude, studentInformation.longitude)
+        let httpBody = String(format: "{\"uniqueKey\": \"%@\", \"firstName\": \"%@\", \"lastName\": \"%@\",\"mapString\": \"%@\", \"mediaURL\": \"%@\",\"latitude\": %.6f, \"longitude\": %.6f}", uniqueKey, studentInformation.firstName, studentInformation.lastName, studentInformation.mapString, studentInformation.mediaURL, studentInformation.latitude, studentInformation.longitude)
         
         let request = NSMutableURLRequest(url: NSURL(string:url)! as URL)
         request.httpMethod = "PUT"
@@ -145,15 +148,19 @@ extension UDBClient {
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
             if error != nil { // Handle error…
-                completion(false)
+                completion(false, (error?.localizedDescription)!)
                 return
             }
-            print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+            //print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
             
             self.userStudentInformation = studentInformation
             self.tempStudentInformation = UDBStudentInformation(dictionary: [:])
     
-            completion(true)
+            if let errorMessage = error?.localizedDescription {
+                completion(true, errorMessage)
+            } else {
+                completion(true, "")
+            }
         }
         task.resume()
     }

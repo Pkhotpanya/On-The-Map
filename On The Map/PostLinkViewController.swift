@@ -43,8 +43,16 @@ class PostLinkViewController: UIViewController, MKMapViewDelegate, UITextFieldDe
     }
 
     @IBAction func submit(_ sender: Any) {
-        //TODO: If the link is empty, the app will display an alert view notifying the user.
-        OTMSubmitStudentLocation(mediaUrl: linkTextField.text!)
+        if (linkTextField.text?.isEmpty)! {
+            let alert = UIAlertController(title: "Link can't be blank", message: "", preferredStyle: .alert)
+            let ok = UIAlertAction(title: "Ok", style: .default, handler: { (alertAction) in
+                alert.dismiss(animated: true, completion: nil)
+            })
+            alert.addAction(ok)
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            OTMSubmitStudentLocation(mediaUrl: linkTextField.text!)
+        }
     }
     
     func cancel(){

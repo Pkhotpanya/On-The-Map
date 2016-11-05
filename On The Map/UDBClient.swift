@@ -31,7 +31,7 @@ class UDBClient: NSObject {
     }
 
     //To authenticate Udacity API requests, you need to get a session ID.
-    func postASession(username: String, password: String, completion: @escaping (_ success: Bool) -> Void){
+    func postASession(username: String, password: String, completion: @escaping (_ success: Bool, _ errorMessage: String) -> Void){
         //udacity - (Dictionary) a dictionary containing a username/password pair used for authentication
         //username - (String) the username (email) for a Udacity student
         //password - (String) the password for a Udacity student
@@ -46,15 +46,26 @@ class UDBClient: NSObject {
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
             if error != nil { // Handle error…
-                completion(false)
+                completion(false, (error?.localizedDescription)!)
                 return
             }
             let newData = data?.subdata(in: 5..<data!.count) /* subset response data! */
             //print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
             
+            
             do{
                 // Convert NSData to Dictionary where keys are of type String, and values are of any type
                 let json = try JSONSerialization.jsonObject(with: newData!, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:AnyObject]
+                
+                if let errorStatus = json["status"] {
+                    if errorStatus as! Int == 400 {
+                        let errorMsg = String(format: "Missing %@", (json["parameter"]?.substring(from:8))!)
+                        completion(false, errorMsg)
+                    }
+                    if errorStatus as! Int == 403 {
+                        completion(false, "Account not found or incorrect password")
+                    }
+                }
                     
                 if let account = json["account"] as! [String:AnyObject]?{
                     self.uniqueKey = account["key"] as? String
@@ -73,7 +84,11 @@ class UDBClient: NSObject {
                 
             }
             
-            completion(true)
+            if let errorMessage = error?.localizedDescription {
+                completion(true, errorMessage)
+            } else {
+                completion(true, "")
+            }
         }
         task.resume()
     }

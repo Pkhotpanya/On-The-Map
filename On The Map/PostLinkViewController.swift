@@ -18,13 +18,11 @@ class PostLinkViewController: UIViewController, MKMapViewDelegate, UITextFieldDe
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let lat = CLLocationDegrees(Double((UDBClient.shared.tempStudentInformation?.latitude)!))
-        let long = CLLocationDegrees(Double((UDBClient.shared.tempStudentInformation?.longitude)!))
+        let lat = CLLocationDegrees(Double((OTMModel.shared.tempStudentInformation?.latitude)!))
+        let long = CLLocationDegrees(Double((OTMModel.shared.tempStudentInformation?.longitude)!))
         
-        // The lat and long are used to create a CLLocationCoordinates2D instance.
         let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
         
-        // Here we create the annotation and set its coordiate, title, and subtitle properties
         let annotation = MKPointAnnotation()
         annotation.coordinate = coordinate
         
@@ -68,6 +66,8 @@ class PostLinkViewController: UIViewController, MKMapViewDelegate, UITextFieldDe
         }
     }
     
+    // MARK: MKMapViewDelegate
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
         let reuseId = "pin"
@@ -85,6 +85,8 @@ class PostLinkViewController: UIViewController, MKMapViewDelegate, UITextFieldDe
         
         return pinView
     }
+    
+    // MARK: UITextFieldDelegate
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()

@@ -19,8 +19,7 @@ class PinTableViewController: UITableViewController, OTMUtility {
         
         NotificationCenter.default.addObserver(self, selector: #selector(PinTableViewController.flipOnShouldReload), name: UDBClient.Constants.ReloadLocationViewsNotification, object: nil)
         
-        //Initial loading of table values from shared model.
-        studentLocations = UDBClient.shared.studentsLocations
+        studentLocations = OTMModel.shared.studentsLocations
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -58,11 +57,11 @@ class PinTableViewController: UITableViewController, OTMUtility {
     }
     
     func reloadTable(){
-        studentLocations = UDBClient.shared.studentsLocations
+        studentLocations = OTMModel.shared.studentsLocations
         tableView.reloadData()
     }
 
-    // MARK: - Table view data source
+    // MARK: Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return studentLocations.count//UDBClient.shared.studentsLocations.count

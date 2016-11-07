@@ -21,7 +21,6 @@ class PinMapViewController: UIViewController, MKMapViewDelegate, OTMUtility {
         
         NotificationCenter.default.addObserver(self, selector: #selector(PinMapViewController.flipOnShouldReload), name: UDBClient.Constants.ReloadLocationViewsNotification, object: nil)
         
-        //Initial call for getting the students location over the web.
         OTMRefreshPins()
         
     }
@@ -37,7 +36,6 @@ class PinMapViewController: UIViewController, MKMapViewDelegate, OTMUtility {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        //Inital call to check for login
         OTMLoginChecker()
     }
     
@@ -78,32 +76,29 @@ class PinMapViewController: UIViewController, MKMapViewDelegate, OTMUtility {
         
         annotations.removeAll()
         
-        let locations = UDBClient.shared.studentsLocations
+        let locations = OTMModel.shared.studentsLocations
         
         for studentLocation in locations {
             
             let lat = CLLocationDegrees(studentLocation.latitude)
             let long = CLLocationDegrees(studentLocation.longitude)
             
-            // The lat and long are used to create a CLLocationCoordinates2D instance.
             let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
             
             let first = studentLocation.firstName
             let last = studentLocation.lastName
             let mediaURL = studentLocation.mediaURL
             
-            // Here we create the annotation and set its coordiate, title, and subtitle properties
             let annotation = MKPointAnnotation()
             annotation.coordinate = coordinate
             annotation.title = "\(first) \(last)"
             annotation.subtitle = mediaURL
             
-            // Finally we place the annotation in an array of annotations.
             annotations.append(annotation)
         }
     }
     
-    // MARK: - MKMapViewDelegate
+    // MARK: MKMapViewDelegate
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         

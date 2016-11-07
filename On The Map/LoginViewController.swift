@@ -32,6 +32,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, OTMUtility {
         OTMSignUp()
     }
     
+    // MARK: UITextFieldDelegate
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if emailTextField.isFirstResponder {
             passwordTextField.becomeFirstResponder()

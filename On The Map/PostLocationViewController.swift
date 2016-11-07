@@ -31,6 +31,7 @@ class PostLocationViewController: UIViewController, UITextFieldDelegate, OTMUtil
         OTMFindLocationOnTheMap(mapString: locationTextField.text!)
     }
     
+    // MARK: UITextFieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         OTMFindLocationOnTheMap(mapString: locationTextField.text!)

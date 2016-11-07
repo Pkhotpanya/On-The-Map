@@ -27,20 +27,47 @@ extension OTMUtility where Self: UIViewController{
     func OTMLogin(username: String, password: String){
         startAnimatingActivity()
         
-        UDBClient.shared.postASession(username: username, password: password, completion: { (success, errorMessage) in
+        UDBClient.shared.postASession(username: username, password: password, completion: { (results, success, errorMessage) in
             if !success {
                 //If the login does not succeed, the user will be presented with an alert view specifying whether it was a failed network connection, or an incorrect email and password.
                 DispatchQueue.main.async {
                     self.stopAnimatingActivity(){
-                        let alert=UIAlertController(title: "Failed to login", message: errorMessage, preferredStyle: UIAlertControllerStyle.alert);
-                        let accept = UIAlertAction(title: "Ok", style: .default, handler: { (alertAction) in
-                            alert.dismiss(animated: true, completion: nil)
-                        })
-                        alert.addAction(accept)
-                        self.present(alert, animated: true, completion: nil)
+                        self.presentAlertMessage(title: "Failed to login.", message: errorMessage)
                     }
                 }
             } else {
+                if let account = results["account"] as! [String:AnyObject]?{
+                    OTMModel.shared.uniqueKey = account["key"] as? String
+                }
+                
+                DispatchQueue.global(qos: .userInitiated).async {
+                    UDBClient.shared.getPublicUserData(uniqueKey: OTMModel.shared.uniqueKey!, completion:{(results, success, errorMessage) in
+                        if success {
+                            if let student = results["user"] as! [String:AnyObject]?{
+                                OTMModel.shared.userFirstName = student["first_name"] as! String?
+                                OTMModel.shared.userLastName = student["last_name"] as! String?
+                            }
+                        } else {
+                            self.presentAlertMessage(title: "Couldn't get user's public data.", message: errorMessage)
+                        }
+                        
+                    })
+                    UDBClient.shared.getAStudentLocation(uniqueKey: OTMModel.shared.uniqueKey!, completion:{(results, success, errorMessage) in
+                        if let students = results["results"] as! [[String:AnyObject]]?{
+                            if success {
+                                if let studentInfo = students.first {
+                                    OTMModel.shared.userStudentInformation = UDBStudentInformation(dictionary: studentInfo)
+                                } else if students.isEmpty {
+                                    OTMModel.shared.userStudentInformation = UDBStudentInformation(dictionary: [:])
+                                }
+                            } else {
+                                self.presentAlertMessage(title: "Couldn't get student's location.", message: errorMessage)
+                            }
+                            
+                        }
+                    })
+                }
+                
                 DispatchQueue.main.async {
                     self.stopAnimatingActivity(){
                         self.dismiss(animated: true, completion: nil)
@@ -57,6 +84,9 @@ extension OTMUtility where Self: UIViewController{
             if success {
                 DispatchQueue.main.async {
                     self.stopAnimatingActivity(){
+                        
+                        self.clearUserInfo()
+                        
                         self.performSegue(withIdentifier: "loginSegue", sender: nil)
                     }
                 }
@@ -65,7 +95,7 @@ extension OTMUtility where Self: UIViewController{
     }
     
     func OTMAddPin() {
-        if !(UDBClient.shared.userStudentInformation?.objectId.isEmpty)! {
+        if !(OTMModel.shared.userStudentInformation?.objectId.isEmpty)! {
             let alert=UIAlertController(title: "Are you sure you want to overwrite existing location?", message: "", preferredStyle: UIAlertControllerStyle.alert);
             
             let accept = UIAlertAction(title: "Yes", style: .default, handler: { (alertAction) in
@@ -85,36 +115,40 @@ extension OTMUtility where Self: UIViewController{
     }
     
     func OTMRefreshPins(){
-        UDBClient.shared.getStudentLocations(limit: 100, skip: 0, order: .reverseUpdatedAt, completion: { (success) in
+        UDBClient.shared.getStudentLocations(limit: 100, skip: 0, order: .reverseUpdatedAt, completion: { (results, success, errorMessage) in
             if success {
+                if let students = results["results"] as! [[String:AnyObject]]?{
+                    var tempStudentsInformation = [UDBStudentInformation]()
+                    for studentInfo in students{
+                        tempStudentsInformation.append( UDBStudentInformation(dictionary: studentInfo) )
+                    }
+                    OTMModel.shared.studentsLocations.removeAll()
+                    OTMModel.shared.studentsLocations.append(contentsOf: tempStudentsInformation)
+                }
+
                 NotificationCenter.default.post(name: UDBClient.Constants.ReloadLocationViewsNotification, object: nil)
             } else {
                 DispatchQueue.main.async {
-                    let alert=UIAlertController(title: "Couldn't download student locations.", message: "", preferredStyle: .alert)
-                    let accept = UIAlertAction(title: "Ok", style: .default, handler: { (alertAction) in
-                        alert.dismiss(animated: true, completion: nil)
-                    })
-                    alert.addAction(accept)
-                    self.present(alert, animated: true, completion: nil)
+                    self.presentAlertMessage(title: "Couldn't download student locations.", message: "")
                 }
             }
         })
     }
     
     func OTMCancelAddingPin(){
-        UDBClient.shared.tempStudentInformation = UDBStudentInformation(dictionary: [:])
+        OTMModel.shared.tempStudentInformation = UDBStudentInformation(dictionary: [:])
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
     
     func OTMFindLocationOnTheMap(mapString: String){
         startAnimatingActivity()
         
-        UDBClient.shared.tempStudentInformation?.mapString = mapString
+        OTMModel.shared.tempStudentInformation?.mapString = mapString
         
         CLGeocoder().geocodeAddressString(mapString, completionHandler: { (placemarks, error) in
             if error == nil {
-                UDBClient.shared.tempStudentInformation?.latitude = Float((placemarks?.first?.location?.coordinate.latitude)!)
-                UDBClient.shared.tempStudentInformation?.longitude = Float((placemarks?.first?.location?.coordinate.longitude)!)
+                OTMModel.shared.tempStudentInformation?.latitude = Float((placemarks?.first?.location?.coordinate.latitude)!)
+                OTMModel.shared.tempStudentInformation?.longitude = Float((placemarks?.first?.location?.coordinate.longitude)!)
                 
                 DispatchQueue.main.async {
                     self.stopAnimatingActivity(){
@@ -126,12 +160,7 @@ extension OTMUtility where Self: UIViewController{
             } else {
                 DispatchQueue.main.async {
                     self.stopAnimatingActivity(){
-                        let alert=UIAlertController(title: "Couldn't find the address.", message: "", preferredStyle: .alert)
-                        let accept = UIAlertAction(title: "Ok", style: .default, handler: { (alertAction) in
-                            alert.dismiss(animated: true, completion: nil)
-                        })
-                        alert.addAction(accept)
-                        self.present(alert, animated: true, completion: nil)
+                        self.presentAlertMessage(title: "Couldn't find the address.", message: "")
                     }
                 }
             }
@@ -142,25 +171,54 @@ extension OTMUtility where Self: UIViewController{
         startAnimatingActivity()
         
         fillInTempStudentName()
-        UDBClient.shared.tempStudentInformation?.mediaURL = mediaUrl
+        OTMModel.shared.tempStudentInformation?.mediaURL = mediaUrl
         
-        if (UDBClient.shared.userStudentInformation?.objectId.isEmpty)! {
-            UDBClient.shared.postAStudentLocation(uniqueKey: UDBClient.shared.uniqueKey!, studentInformation: UDBClient.shared.tempStudentInformation!, completion: { (success, errorMessage) in
-                self.submissionResponse(worked: success, why: errorMessage)
+        if (OTMModel.shared.userStudentInformation?.objectId.isEmpty)! {
+            UDBClient.shared.postAStudentLocation(uniqueKey: OTMModel.shared.uniqueKey!, studentInformation: OTMModel.shared.tempStudentInformation!, completion: { (results, success, errorMessage) in
+                
+                if let objectId = results["objectId"]{
+                    OTMModel.shared.objectId = objectId as? String
+                }
+                
+                DispatchQueue.global(qos: .userInitiated).async {
+                    UDBClient.shared.getAStudentLocation(uniqueKey: OTMModel.shared.uniqueKey!, completion:{(results, success, errorMessage) in
+                        if let students = results["results"] as! [[String:AnyObject]]?{
+                            if success {
+                                if let studentInfo = students.first {
+                                    OTMModel.shared.userStudentInformation = UDBStudentInformation(dictionary: studentInfo)
+                                } else if students.isEmpty {
+                                    OTMModel.shared.userStudentInformation = UDBStudentInformation(dictionary: [:])
+                                }
+                            } else {
+                                self.presentAlertMessage(title: "Couldn't get student's location.", message: errorMessage)
+                            }
+                            
+                        }
+                    })
+                }
+                OTMModel.shared.tempStudentInformation = UDBStudentInformation(dictionary: [:])
+                
+                self.studentInformationsubmissionResponse(worked: success, why: errorMessage)
             })
         } else {
-            UDBClient.shared.putAStudentLocation(objectId: (UDBClient.shared.userStudentInformation?.objectId)!, uniqueKey: UDBClient.shared.uniqueKey!, studentInformation: UDBClient.shared.tempStudentInformation!, completion: { (success, errorMessage) in
-                self.submissionResponse(worked: success, why: errorMessage)
+            UDBClient.shared.putAStudentLocation(objectId: (OTMModel.shared.userStudentInformation?.objectId)!, uniqueKey: OTMModel.shared.uniqueKey!, studentInformation: OTMModel.shared.tempStudentInformation!, completion: { (results, success, errorMessage) in
+                
+                OTMModel.shared.userStudentInformation = OTMModel.shared.tempStudentInformation
+                OTMModel.shared.tempStudentInformation = UDBStudentInformation(dictionary: [:])
+                
+                self.studentInformationsubmissionResponse(worked: success, why: errorMessage)
             })
         }
     }
     
+    //MARK: Submit student location helper functions
+    
     func fillInTempStudentName(){
-        UDBClient.shared.tempStudentInformation?.firstName = UDBClient.shared.userFirstName!
-        UDBClient.shared.tempStudentInformation?.lastName = UDBClient.shared.userLastName!
+        OTMModel.shared.tempStudentInformation?.firstName = OTMModel.shared.userFirstName!
+        OTMModel.shared.tempStudentInformation?.lastName = OTMModel.shared.userLastName!
     }
     
-    func submissionResponse(worked: Bool, why: String){
+    func studentInformationsubmissionResponse(worked: Bool, why: String){
         if worked {
             DispatchQueue.main.async {
                 self.stopAnimatingActivity {
@@ -171,17 +229,32 @@ extension OTMUtility where Self: UIViewController{
             //If the submission fails to post the data to the server, then the user should see an alert with an error message describing the failure.
             DispatchQueue.main.async {
                 self.stopAnimatingActivity(){
-                    let alert = UIAlertController(title: "Couldn't save student location", message: why, preferredStyle: .alert)
-                    let accept = UIAlertAction(title: "Ok", style: .default, handler: { (alertAction) in
-                        alert.dismiss(animated: true, completion: nil)
-                    })
-                    alert.addAction(accept)
-                    self.present(alert, animated: true, completion: nil)
+                    self.presentAlertMessage(title: "Couldn't save student location.", message: why)
                 }
             }
         }
     }
     
+    //MARK: Log out helper function
+    func clearUserInfo(){
+        OTMModel.shared.uniqueKey = ""
+        OTMModel.shared.userFirstName = ""
+        OTMModel.shared.userLastName = ""
+        OTMModel.shared.tempStudentInformation = UDBStudentInformation(dictionary: [:])
+        OTMModel.shared.userStudentInformation = UDBStudentInformation(dictionary: [:])
+    }
+    
+    //MARK: Alert message helper function
+    func presentAlertMessage(title: String, message: String){
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let accept = UIAlertAction(title: "Ok", style: .default, handler: { (alertAction) in
+            alert.dismiss(animated: true, completion: nil)
+        })
+        alert.addAction(accept)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    //MARK: Activity indicator modal popup functions
     func startAnimatingActivity(){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "activityIndicatorViewController")
@@ -195,4 +268,6 @@ extension OTMUtility where Self: UIViewController{
             completion()
         }
     }
+    
+    
 }

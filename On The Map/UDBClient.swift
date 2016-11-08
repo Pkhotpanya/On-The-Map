@@ -9,14 +9,9 @@
 
 import UIKit
 
-class UDBClient: NSObject {
+class UDBClient{
     
     static let shared = UDBClient()
-    
-    // MARK: Initializers
-    private override init() {
-        super.init()
-    }
     
     // MARK: Authentication state
     var sessionID: String? = ""

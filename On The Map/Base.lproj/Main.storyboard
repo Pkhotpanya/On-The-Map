@@ -106,6 +106,7 @@
                     <connections>
                         <outlet property="emailTextField" destination="S27-35-y1v" id="8yy-Ta-qsj"/>
                         <outlet property="passwordTextField" destination="OIo-NN-IEa" id="5iV-TM-NUV"/>
+                        <outlet property="welcomeStackView" destination="cfB-au-Qcx" id="qFt-eB-JdR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -377,6 +378,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="locationQuestionLabel" destination="6Pk-vf-URV" id="qNl-Wv-fsg"/>
                         <outlet property="locationTextField" destination="AGH-cF-8RD" id="Hnl-2R-N8b"/>
                         <segue destination="SlH-FP-dre" kind="show" identifier="postLinkViewSegue" id="NZC-Fp-xfw"/>
                     </connections>

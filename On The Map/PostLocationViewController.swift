@@ -11,6 +11,7 @@ import UIKit
 
 class PostLocationViewController: UIViewController, UITextFieldDelegate, OTMUtility {
     
+    @IBOutlet weak var locationQuestionLabel: UILabel!
     @IBOutlet weak var locationTextField: UITextField!
     
     override func viewDidLoad() {
@@ -45,7 +46,7 @@ class PostLocationViewController: UIViewController, UITextFieldDelegate, OTMUtil
     }
     
     func keyboardWillShow(_ notification: NSNotification) {
-        view.frame.origin.y = getKeyboardHeight(notification) * (-1)
+        view.frame.origin.y = locationQuestionLabel.frame.height * (-1)
     }
     
     func keyboardWillHide(_ notification: NSNotification) {

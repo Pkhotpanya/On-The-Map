@@ -11,6 +11,7 @@ import UIKit
 
 class LoginViewController: UIViewController, UITextFieldDelegate, OTMUtility {
     
+    @IBOutlet weak var welcomeStackView: UIStackView!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
@@ -38,7 +39,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, OTMUtility {
         if emailTextField.isFirstResponder {
             passwordTextField.becomeFirstResponder()
         } else if passwordTextField.isFirstResponder {
-            passwordTextField.resignFirstResponder()
+            textField.resignFirstResponder()
             OTMLogin(username: emailTextField.text!, password: passwordTextField.text!)
         }
         return true
@@ -48,14 +49,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate, OTMUtility {
     func subscribeToKeyboardNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orientationChanged(_:)), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
     }
     
     func keyboardWillShow(_ notification: NSNotification) {
-        view.frame.origin.y = getKeyboardHeight(notification) * (-1)
+        shouldFocusOnTextfields()
     }
     
     func keyboardWillHide(_ notification: NSNotification) {
-        view.frame.origin.y = 0
+        welcomeStackView.isHidden = false
     }
     
     func getKeyboardHeight(_ notification: NSNotification) -> CGFloat {
@@ -69,6 +71,24 @@ class LoginViewController: UIViewController, UITextFieldDelegate, OTMUtility {
             NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name:
             NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.removeObserver(self, name:
+            NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
     }
-
+    
+    func orientationChanged(_ notification: NSNotification){
+        shouldFocusOnTextfields()
+    }
+    
+    func keyboardIsVisible() -> Bool{
+        return (emailTextField.isFirstResponder || passwordTextField.isFirstResponder)
+    }
+    
+    func shouldFocusOnTextfields(){
+        if UIApplication.shared.statusBarOrientation.isPortrait && keyboardIsVisible(){
+            welcomeStackView.isHidden = true
+        } else {
+            welcomeStackView.isHidden = false
+        }
+    }
+    
 }

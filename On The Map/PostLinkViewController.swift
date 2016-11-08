@@ -47,7 +47,7 @@ class PostLinkViewController: UIViewController, MKMapViewDelegate, UITextFieldDe
                 alert.dismiss(animated: true, completion: nil)
             })
             alert.addAction(ok)
-            self.present(alert, animated: true, completion: nil)
+            present(alert, animated: true, completion: nil)
         } else {
             OTMSubmitStudentLocation(mediaUrl: linkTextField.text!)
         }
@@ -60,9 +60,9 @@ class PostLinkViewController: UIViewController, MKMapViewDelegate, UITextFieldDe
     func configureBarButtons(enable: Bool){
         if enable{
             let cancelButton = UIBarButtonItem.init(title: "Cancel", style: .plain, target: self, action: #selector(cancel))
-            self.navigationItem.rightBarButtonItem = cancelButton
+            navigationItem.rightBarButtonItem = cancelButton
         } else {
-            self.navigationItem.rightBarButtonItem = nil
+            navigationItem.rightBarButtonItem = nil
         }
     }
     

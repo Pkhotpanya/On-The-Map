@@ -9,14 +9,9 @@
 
 import UIKit
 
-class OTMModel: NSObject {
+class OTMModel{
 
     static let shared = OTMModel()
-    
-    // MARK: Initializers
-    private override init() {
-        super.init()
-    }
     
     // MARK: Current user info
     var uniqueKey: String? = ""

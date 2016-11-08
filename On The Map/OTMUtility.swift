@@ -16,7 +16,7 @@ extension OTMUtility where Self: UIViewController{
     
     func OTMLoginChecker() {
         if (UDBClient.shared.sessionID?.isEmpty)! {
-            self.performSegue(withIdentifier: "loginSegue", sender: nil)
+            performSegue(withIdentifier: "loginSegue", sender: nil)
         }
     }
     
@@ -137,7 +137,7 @@ extension OTMUtility where Self: UIViewController{
     
     func OTMCancelAddingPin(){
         OTMModel.shared.tempStudentInformation = UDBStudentInformation(dictionary: [:])
-        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+        view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
     
     func OTMFindLocationOnTheMap(mapString: String){
@@ -251,7 +251,7 @@ extension OTMUtility where Self: UIViewController{
             alert.dismiss(animated: true, completion: nil)
         })
         alert.addAction(accept)
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
     
     //MARK: Activity indicator modal popup functions
@@ -259,12 +259,12 @@ extension OTMUtility where Self: UIViewController{
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "activityIndicatorViewController")
         controller.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
-        self.present(controller, animated: false, completion: nil)
+        present(controller, animated: false, completion: nil)
     }
     
     func stopAnimatingActivity(completion: (Void) -> Void){
-        if (self.presentedViewController?.restorationIdentifier == "activityIndicatorViewController") {
-            self.dismiss(animated: false, completion: nil)
+        if (presentedViewController?.restorationIdentifier == "activityIndicatorViewController") {
+            dismiss(animated: false, completion: nil)
             completion()
         }
     }

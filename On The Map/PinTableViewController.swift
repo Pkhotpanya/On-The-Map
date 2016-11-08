@@ -29,10 +29,6 @@ class PinTableViewController: UITableViewController, OTMUtility {
             shouldReload = false
         }
     }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
     
     @IBAction func logOut(_ sender: Any) {
         OTMLogOut()
@@ -47,7 +43,7 @@ class PinTableViewController: UITableViewController, OTMUtility {
     }
     
     func flipOnShouldReload(){
-        if self.isViewLoaded && (self.view.window != nil){
+        if isViewLoaded && (view.window != nil){
             DispatchQueue.main.async {
                 self.reloadTable()
             }

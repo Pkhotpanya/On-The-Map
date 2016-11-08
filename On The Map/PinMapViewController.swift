@@ -52,7 +52,7 @@ class PinMapViewController: UIViewController, MKMapViewDelegate, OTMUtility {
     }
     
     func flipOnShouldReload(){
-        if self.isViewLoaded && (self.view.window != nil) {
+        if isViewLoaded && (view.window != nil) {
             DispatchQueue.main.async {
                 self.reloadMap()
             }

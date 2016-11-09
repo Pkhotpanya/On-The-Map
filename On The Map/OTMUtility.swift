@@ -36,35 +36,32 @@ extension OTMUtility where Self: UIViewController{
                     }
                 }
             } else {
-                if let account = results["account"] as! [String:AnyObject]?{
+                if let account = results["account"] as! [String:AnyObject]? {
                     OTMModel.shared.uniqueKey = account["key"] as? String
                 }
                 
                 DispatchQueue.global(qos: .userInitiated).async {
                     UDBClient.shared.getPublicUserData(uniqueKey: OTMModel.shared.uniqueKey!, completion:{(results, success, errorMessage) in
-                        if success {
-                            if let student = results["user"] as! [String:AnyObject]?{
-                                OTMModel.shared.userFirstName = student["first_name"] as! String?
-                                OTMModel.shared.userLastName = student["last_name"] as! String?
-                            }
-                        } else {
+                        guard let student = results["user"] as! [String:AnyObject]? else {
                             self.presentAlertMessage(title: "Couldn't get user's public data.", message: errorMessage)
+                            return
                         }
-                        
+                        OTMModel.shared.userFirstName = student["first_name"] as! String?
+                        OTMModel.shared.userLastName = student["last_name"] as! String?
                     })
                     UDBClient.shared.getAStudentLocation(uniqueKey: OTMModel.shared.uniqueKey!, completion:{(results, success, errorMessage) in
-                        if let students = results["results"] as! [[String:AnyObject]]?{
-                            if success {
-                                if let studentInfo = students.first {
-                                    OTMModel.shared.userStudentInformation = UDBStudentInformation(dictionary: studentInfo)
-                                } else if students.isEmpty {
-                                    OTMModel.shared.userStudentInformation = UDBStudentInformation(dictionary: [:])
-                                }
-                            } else {
-                                self.presentAlertMessage(title: "Couldn't get student's location.", message: errorMessage)
-                            }
-                            
+                        guard let students = results["results"] as! [[String:AnyObject]]? else {
+                            OTMModel.shared.userStudentInformation = UDBStudentInformation(dictionary: [:])
+                            self.presentAlertMessage(title: "Couldn't get student's location.", message: errorMessage)
+                            return
                         }
+                        
+                        guard let studentInfo = students.first else {
+                            OTMModel.shared.userStudentInformation = UDBStudentInformation(dictionary: [:])
+                            self.presentAlertMessage(title: "Couldn't get student's location.", message: errorMessage)
+                            return
+                        }
+                        OTMModel.shared.userStudentInformation = UDBStudentInformation(dictionary: studentInfo)
                     })
                 }
                 
@@ -84,9 +81,7 @@ extension OTMUtility where Self: UIViewController{
             if success {
                 DispatchQueue.main.async {
                     self.stopAnimatingActivity(){
-                        
                         self.clearUserInfo()
-                        
                         self.performSegue(withIdentifier: "loginSegue", sender: nil)
                     }
                 }
@@ -116,22 +111,20 @@ extension OTMUtility where Self: UIViewController{
     
     func OTMRefreshPins(){
         UDBClient.shared.getStudentLocations(limit: 100, skip: 0, order: .reverseUpdatedAt, completion: { (results, success, errorMessage) in
-            if success {
-                if let students = results["results"] as! [[String:AnyObject]]?{
-                    var tempStudentsInformation = [UDBStudentInformation]()
-                    for studentInfo in students{
-                        tempStudentsInformation.append( UDBStudentInformation(dictionary: studentInfo) )
-                    }
-                    OTMModel.shared.studentsLocations.removeAll()
-                    OTMModel.shared.studentsLocations.append(contentsOf: tempStudentsInformation)
-                }
-
-                NotificationCenter.default.post(name: UDBClient.Constants.ReloadLocationViewsNotification, object: nil)
-            } else {
+            guard let students = results["results"] as! [[String:AnyObject]]? else {
                 DispatchQueue.main.async {
                     self.presentAlertMessage(title: "Couldn't download student locations.", message: "")
                 }
+                return
             }
+            
+            var tempStudentsInformation = [UDBStudentInformation]()
+            for studentInfo in students{
+                tempStudentsInformation.append( UDBStudentInformation(dictionary: studentInfo) )
+            }
+            OTMModel.shared.studentsLocations.removeAll()
+            OTMModel.shared.studentsLocations.append(contentsOf: tempStudentsInformation)
+            NotificationCenter.default.post(name: UDBClient.Constants.ReloadLocationViewsNotification, object: nil)
         })
     }
     
@@ -182,18 +175,19 @@ extension OTMUtility where Self: UIViewController{
                 
                 DispatchQueue.global(qos: .userInitiated).async {
                     UDBClient.shared.getAStudentLocation(uniqueKey: OTMModel.shared.uniqueKey!, completion:{(results, success, errorMessage) in
-                        if let students = results["results"] as! [[String:AnyObject]]?{
-                            if success {
-                                if let studentInfo = students.first {
-                                    OTMModel.shared.userStudentInformation = UDBStudentInformation(dictionary: studentInfo)
-                                } else if students.isEmpty {
-                                    OTMModel.shared.userStudentInformation = UDBStudentInformation(dictionary: [:])
-                                }
-                            } else {
-                                self.presentAlertMessage(title: "Couldn't get student's location.", message: errorMessage)
-                            }
-                            
+                        guard let students = results["results"] as! [[String:AnyObject]]? else {
+                            OTMModel.shared.userStudentInformation = UDBStudentInformation(dictionary: [:])
+                            self.presentAlertMessage(title: "Couldn't get student's location.", message: errorMessage)
+                            return
                         }
+                        
+                        guard let studentInfo = students.first else {
+                            OTMModel.shared.userStudentInformation = UDBStudentInformation(dictionary: [:])
+                            self.presentAlertMessage(title: "Couldn't get student's location.", message: errorMessage)
+                            return
+                        }
+                        
+                        OTMModel.shared.userStudentInformation = UDBStudentInformation(dictionary: studentInfo)
                     })
                 }
                 OTMModel.shared.tempStudentInformation = UDBStudentInformation(dictionary: [:])
